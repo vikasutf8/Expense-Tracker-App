@@ -2,6 +2,7 @@ package com.Expenses.AuthService.Service;
 
 import com.Expenses.AuthService.Enitity.UserInfo;
 import com.Expenses.AuthService.Enitity.UserRole;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,7 @@ import java.util.List;
 
 
 @Service
+@RequiredArgsConstructor
 public class CustomUserDetails extends UserInfo implements UserDetails {
 
 //fields

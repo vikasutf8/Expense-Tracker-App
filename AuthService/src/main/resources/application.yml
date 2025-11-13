@@ -1,0 +1,34 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/expense_tracker
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        type:
+          # ✅ Show parameter bindings in logs
+          descriptor:
+            sql:
+              BasicBinder: trace
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG           # ✅ Show SQL queries
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE  # ✅ Show query parameter bindings
+    org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl: DEBUG  # ✅ Connection info
+    org.hibernate.engine.jdbc.connections.internal: DEBUG
+    org.springframework.jdbc.core: DEBUG                 # ✅ Log JDBC operations
+    org.springframework.jdbc.datasource: DEBUG
+
+  # Optional: set server port
+  server:
+    port: 8081
