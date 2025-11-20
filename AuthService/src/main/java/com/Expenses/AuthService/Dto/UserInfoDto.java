@@ -1,6 +1,7 @@
 package com.Expenses.AuthService.Dto;
 
 
+import com.Expenses.AuthService.Enitity.Enum.RoleType;
 import com.Expenses.AuthService.Enitity.UserInfo;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -13,8 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy .class)
 public class UserInfoDto extends UserInfo {
-    private String userName;
-    private String lastName;
-    private String phoneNumber;
-    private String email;
+    private String username;
+    private String password;
+    private RoleType userRole;
 }

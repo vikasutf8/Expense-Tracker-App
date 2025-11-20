@@ -41,23 +41,29 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
 
     public  UserInfo checkIfUserAlreadyExist(UserInfoDto userInfoDto){
-        return userInfoRepository.findByUsername(userInfoDto.getUserName());
+        return userInfoRepository.findByUsername(userInfoDto.getUsername()
+        );
     }
 
-    public  boolean signUp(UserInfoDto userInfoDto){
+    public  boolean signUp(UserInfoDto dto){
 
-//        validation of email or password
-        userInfoDto.setPassword(passwordEncoder.encode(userInfoDto.getPassword()));
+        // encode password
+        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
 
-        if(Objects.nonNull(checkIfUserAlreadyExist(userInfoDto))){
-            return  false;
+        // check duplicate
+        if (checkIfUserAlreadyExist(dto) != null) {
+            return false;
         }
 
-        String userId =UUID.randomUUID().toString();
+        // map DTO → Entity
+        UserInfo user = new UserInfo();
+        user.setUsername(dto.getUsername());
+        user.setPassword(dto.getPassword());
+        user.setRoles(dto.getRoles());
 
-        userInfoRepository.save(new UserInfo(userId,userInfoDto.getUsername(),userInfoDto.getPassword(),new HashSet<>()));
+        userInfoRepository.save(user);
 
-        return  true;
+        return true;
 
     }
 }

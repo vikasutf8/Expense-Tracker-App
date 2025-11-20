@@ -1,6 +1,5 @@
 package com.Expenses.AuthService.Enitity;
 
-import com.Expenses.AuthService.Enitity.Enum.RoleType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

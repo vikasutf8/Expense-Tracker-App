@@ -27,6 +27,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody UserInfoDto userInfoDto) {
+        System.out.println(userInfoDto+"userInfo");
         try {
             Boolean isSignedUp = userDetailsService.signUp(userInfoDto);
 
@@ -34,10 +35,10 @@ public class AuthController {
                 return new ResponseEntity<>("User already exists", HttpStatus.BAD_REQUEST);
             }
 
-            // ✅ Create refresh token and JWT token
+
         Tokens refreshToken = refreshTokenService.createRefreshToken(userInfoDto.getUsername());
             String jwtToken = jwtService.generateToken(userInfoDto.getUsername());
-
+            System.out.println("jwttoken generate"+jwtToken);
             // ✅ Build and return response
             JwtResponseTokenDto jwtResponse = JwtResponseTokenDto.builder()
                     .accessToken(jwtToken)
