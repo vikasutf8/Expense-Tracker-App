@@ -10,20 +10,18 @@ import org.hibernate.annotations.GenericGenerator;
 
 import java.util.HashSet;
 import java.util.Set;
-
-@AllArgsConstructor
-@Data
-@NoArgsConstructor
 @Entity
 @Table(name = "users")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class UserInfo {
-
 
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "user_id", updatable = false, nullable = false)
+    @Column(name = "user_id")
     private String userId;
 
     private String username;
@@ -36,5 +34,5 @@ public class UserInfo {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<UserRole> roles =new HashSet<>();
+    private Set<UserRole> roles = new HashSet<>();
 }

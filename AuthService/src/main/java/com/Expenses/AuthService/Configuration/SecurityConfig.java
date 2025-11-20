@@ -43,15 +43,22 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .cors(CorsConfigurer::disable)
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/v1/login","/auth/v1/refresh-token","/auth/v1/signup").permitAll()
+                        .requestMatchers(
+                                "/auth/v1/login",
+                                "/auth/v1/signup",
+                                "/auth/v1/refresh-token",
+                                "/apis/swaggers/**",
+                                "/apis/docs/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
-                .sessionManagement(sess ->sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .authenticationProvider(authenticationProvider())
-                .httpBasic(Customizer.withDefaults());
+                .authenticationProvider(authenticationProvider());
 
         return http.build();
     }

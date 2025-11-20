@@ -20,7 +20,7 @@ public class UserRole {
     @Column(name = "role_id")
     private  Long roleId;
 
-    @Enumerated(value = EnumType.STRING)
+
     @Column(name = "role_name")
-    private RoleType roleTypeName;
+    private String roleTypeName;
 }
