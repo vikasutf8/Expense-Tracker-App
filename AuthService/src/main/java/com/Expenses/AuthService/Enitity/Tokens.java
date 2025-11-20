@@ -19,14 +19,12 @@ public class Tokens {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "token_id")
     private Long tokenId;
 
     private String token;
-
     private Instant expiryDate;
 
-    @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true)
-    @JoinColumn(name = "token_id", referencedColumnName = "user_id")
+    @OneToOne
+    @JoinColumn(name = "user_id")   // FK in tokens table
     private UserInfo userInfo;
 }

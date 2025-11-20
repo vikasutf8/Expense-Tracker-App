@@ -1,8 +1,11 @@
 package com.Expenses.AuthService.Service;
 
 import com.Expenses.AuthService.Dto.UserInfoDto;
+import com.Expenses.AuthService.Enitity.Enum.RoleType;
 import com.Expenses.AuthService.Enitity.UserInfo;
+import com.Expenses.AuthService.Enitity.UserRole;
 import com.Expenses.AuthService.Repository.UserInfoRepository;
+import com.Expenses.AuthService.Repository.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -22,7 +26,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     private final UserInfoRepository userInfoRepository;
 
-    private  final PasswordEncoder passwordEncoder; 
+    private  final PasswordEncoder passwordEncoder;
+
+    private  final UserRoleRepository userRoleRepository;
 
     private String encodePassword(String rawPassword) {
         return passwordEncoder.encode(rawPassword);
@@ -49,18 +55,25 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
         // encode password
         dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+//        Set<UserRole> roles = userRoleRepository.findByRoleTypeNameIn(dto.getRoles());
+
+        Set<RoleType> roles = dto.getRoles();
 
         // check duplicate
         if (checkIfUserAlreadyExist(dto) != null) {
             return false;
         }
 
-        // map DTO → Entity
-        UserInfo user = new UserInfo();
-        user.setUsername(dto.getUsername());
-        user.setPassword(dto.getPassword());
-        user.setRoles(dto.getRoles());
+        if (roles.isEmpty()) {
+            throw new RuntimeException("Invalid roles provided");
+        }
 
+        // create user
+        UserInfo user = UserInfo.builder()
+                .username(dto.getUsername())
+                .password(passwordEncoder.encode(dto.getPassword()))
+                .roles(roles)
+                .build();
         userInfoRepository.save(user);
 
         return true;
