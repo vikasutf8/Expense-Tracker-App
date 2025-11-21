@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
-    Set<UserRole> findByRoleTypeNameIn(List<RoleType> roleNames);
+    Set<UserRole> findByRoleTypeNameIn(Set<RoleType> roleNames);
 }
 

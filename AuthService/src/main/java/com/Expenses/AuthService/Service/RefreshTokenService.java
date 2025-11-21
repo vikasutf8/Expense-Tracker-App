@@ -24,7 +24,7 @@ public class RefreshTokenService {
     public Tokens createRefreshToken(String Username){
         UserInfo userInfoExtract = userInfoRepository.findByUsername(Username);
 
-        System.out.println("userInfo on findbuyusername"+userInfoExtract);
+        System.out.println("userInfo on find by username"+userInfoExtract);
 
 //        Instead of calling a constructor directly, it lets you set properties by name and then build the object.
          Tokens refreshToken = Tokens

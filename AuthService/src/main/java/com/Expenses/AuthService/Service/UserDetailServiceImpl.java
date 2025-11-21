@@ -52,17 +52,12 @@ public class UserDetailServiceImpl implements UserDetailsService {
     }
 
     public  boolean signUp(UserInfoDto dto){
-
-        // encode password
-        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
-//        Set<UserRole> roles = userRoleRepository.findByRoleTypeNameIn(dto.getRoles());
-
-        Set<RoleType> roles = dto.getRoles();
-
-        // check duplicate
         if (checkIfUserAlreadyExist(dto) != null) {
             return false;
         }
+
+        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+        Set<UserRole> roles =userRoleRepository.findByRoleTypeNameIn(dto.getRoles());
 
         if (roles.isEmpty()) {
             throw new RuntimeException("Invalid roles provided");
