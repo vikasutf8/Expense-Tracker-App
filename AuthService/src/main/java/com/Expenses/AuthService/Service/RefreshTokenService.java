@@ -30,6 +30,7 @@ public class RefreshTokenService {
          Tokens refreshToken = Tokens
                  .builder()
                  .userInfo(userInfoExtract)
+                 .token(UUID.randomUUID().toString()) //random refresh token created
                  .expiryDate(Instant.now().plusMillis(6000000))
                  .build();
 

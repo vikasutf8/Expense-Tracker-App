@@ -38,7 +38,7 @@ public class AuthController {
 
         Tokens refreshToken = refreshTokenService.createRefreshToken(userInfoDto.getUsername());
             String jwtToken = jwtService.generateToken(userInfoDto.getUsername());
-            System.out.println("jwttoken generate"+jwtToken);
+            System.out.println("jwt token generate"+jwtToken);
             // ✅ Build and return response
             JwtResponseTokenDto jwtResponse = JwtResponseTokenDto.builder()
                     .accessToken(jwtToken)
