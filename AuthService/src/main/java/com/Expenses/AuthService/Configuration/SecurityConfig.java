@@ -86,9 +86,8 @@ public class SecurityConfig {
 
 
     @Bean
-    @Autowired
-    UserDetailsService userDetailsService(UserInfoRepository userInfoRepository, PasswordEncoder passwordEncoder1, UserRoleRepository userRoleRepository){
-        return new UserDetailServiceImpl(userInfoRepository,passwordEncoder1,userRoleRepository);
+    UserDetailsService userDetailsService(UserInfoRepository userInfoRepository, PasswordEncoder passwordEncoder, UserRoleRepository userRoleRepository){
+        return new UserDetailServiceImpl(userInfoRepository,passwordEncoder,userRoleRepository);
     }
 
     @Bean
@@ -97,7 +96,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter,AuthenticationProvider authenticationProvider) throws Exception {
 
         http
                 .csrf(csrf -> csrf.disable())
@@ -116,15 +115,16 @@ public class SecurityConfig {
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .authenticationProvider(authenticationProvider());
+                .authenticationProvider(authenticationProvider);
 
         return http.build();
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService,
+                                                         PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsServiceImpl);
+        authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder);
 
         System.out.println(authProvider+"auth provider working at login 2");

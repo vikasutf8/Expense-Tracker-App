@@ -36,7 +36,11 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException  {
+
+
         UserInfo user = userInfoRepository.findByUsername(username);
+        System.out.println("Encoder used: " + passwordEncoder);
+        System.out.println("Encoded password from DB: " + user.getPassword());
         if(user==null){
             throw new UsernameNotFoundException("Could not found user"+username);
         }
@@ -55,18 +59,16 @@ public class UserDetailServiceImpl implements UserDetailsService {
         if (checkIfUserAlreadyExist(dto) != null) {
             return false;
         }
-
-        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
         Set<UserRole> roles =userRoleRepository.findByRoleTypeNameIn(dto.getRoles());
 
         if (roles.isEmpty()) {
             throw new RuntimeException("Invalid roles provided");
         }
-
+        String encodedPassword = passwordEncoder.encode(dto.getPassword());
         // create user
         UserInfo user = UserInfo.builder()
                 .username(dto.getUsername())
-                .password(passwordEncoder.encode(dto.getPassword()))
+                .password(encodedPassword)
                 .roles(roles)
                 .build();
         userInfoRepository.save(user);

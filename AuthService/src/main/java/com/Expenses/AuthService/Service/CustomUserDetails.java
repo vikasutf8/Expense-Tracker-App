@@ -30,6 +30,8 @@ public class CustomUserDetails extends UserInfo implements UserDetails {
     public CustomUserDetails(UserInfo userInfo) {
        this.username = userInfo.getUsername();
        this.password = userInfo.getPassword();
+        System.out.println(username);
+        System.out.println(password);
 
         List<GrantedAuthority> auths =new ArrayList<>();
 
@@ -46,17 +48,17 @@ public class CustomUserDetails extends UserInfo implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getAuthorities();
+        return this.authorities;
     }
 
     @Override
     public String getPassword() {
-        return super.getPassword();
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return super.getUsername();
+        return this.username;
     }
 
     @Override

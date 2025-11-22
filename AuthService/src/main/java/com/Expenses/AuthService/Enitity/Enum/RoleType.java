@@ -1,9 +1,9 @@
 package com.Expenses.AuthService.Enitity.Enum;
 
 public enum RoleType {
-    ADMIN,
+    CLIENT,
     USER,
     MANAGER,
-    STUDENT,
-    CLIENT
+    ADMIN,
+    STAFF
 }

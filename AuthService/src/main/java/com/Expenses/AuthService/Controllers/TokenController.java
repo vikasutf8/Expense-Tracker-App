@@ -5,6 +5,8 @@ import com.Expenses.AuthService.Dto.AuthRequestDto;
 import com.Expenses.AuthService.Dto.JwtResponseTokenDto;
 import com.Expenses.AuthService.Dto.RefreshTokenRequestDto;
 import com.Expenses.AuthService.Enitity.Tokens;
+import com.Expenses.AuthService.Enitity.UserInfo;
+import com.Expenses.AuthService.Repository.UserInfoRepository;
 import com.Expenses.AuthService.Service.JwtTokenService;
 import com.Expenses.AuthService.Service.RefreshTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,19 +31,31 @@ public class TokenController {
     @Autowired
     private JwtTokenService jwtService;
 
+    @Autowired
+    private UserInfoRepository userInfoRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     // ✅ LOGIN ENDPOINT
     @PostMapping("/login")
     public ResponseEntity<?> authenticateAndFetchToken(@RequestBody AuthRequestDto authRequestDTO) {
+        UserInfo user = userInfoRepository.findByUsername(authRequestDTO.getUsername());
+        if (user != null) {
+            System.out.println("Raw password login: " + authRequestDTO.getPassword());
+            System.out.println("Encoded password from DB: " + user.getPassword());
+            System.out.println("Matches? " + passwordEncoder.matches(authRequestDTO.getPassword(), user.getPassword()));
+        }
 
-        System.out.println(authRequestDTO+"auth request dto");
         try {
+            System.out.println(authRequestDTO.getUsername()+"auth request dto"+authRequestDTO.getPassword());
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             authRequestDTO.getUsername(),
                             authRequestDTO.getPassword()
                     )
             );
-
+            System.out.println(authentication+"dsfjhashdkj");
             if (authentication.isAuthenticated()) {
                 System.out.println(authentication.isAuthenticated());
                 Tokens refreshToken = refreshTokenService.createRefreshToken(authRequestDTO.getUsername());
