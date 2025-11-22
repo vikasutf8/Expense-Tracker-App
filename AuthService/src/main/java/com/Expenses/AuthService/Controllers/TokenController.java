@@ -31,6 +31,8 @@ public class TokenController {
     // ✅ LOGIN ENDPOINT
     @PostMapping("/login")
     public ResponseEntity<?> authenticateAndFetchToken(@RequestBody AuthRequestDto authRequestDTO) {
+
+        System.out.println(authRequestDTO+"auth request dto");
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -40,7 +42,7 @@ public class TokenController {
             );
 
             if (authentication.isAuthenticated()) {
-                // ✅ Create refresh token & JWT token
+                System.out.println(authentication.isAuthenticated());
                 Tokens refreshToken = refreshTokenService.createRefreshToken(authRequestDTO.getUsername());
                 String jwtToken = jwtService.generateToken(authRequestDTO.getUsername());
 

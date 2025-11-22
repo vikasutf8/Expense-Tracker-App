@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -27,9 +28,9 @@ public class JwtTokenService {
 
      // Login or Checking
 
-    public boolean isTokenValid(String token, String username) {
+    public boolean isTokenValid(String token, UserDetails userDetails) {
         final String extractedUsername = extractUsername(token);
-        return (extractedUsername.equals(username) && !isTokenExpired(token));
+        return (extractedUsername.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     private boolean isTokenExpired(String token) {
@@ -41,7 +42,7 @@ public class JwtTokenService {
     }
 
 
-    //from token payload to extact usernameor any thing --STORED in claims
+    //from token payload to extract username or any thing --STORED in claims
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -67,16 +68,16 @@ public class JwtTokenService {
 //    !!Creatations
 
    // signup data coming -- create jwt token/access token/refresh token via username only(or adding id ,roles,anything)
-    public String generateToken(String username) {
+    public String  generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, username);
     }
 
 // on creatio time set all 3 para.. payload,secret, header, expiry
-    private String createToken(Map<String, Object> claims, String subject) {
+    private String createToken(Map<String, Object> claims, String username) {
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(subject)
+                .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 ))
                 .signWith(getSecretKey(), SignatureAlgorithm.HS256)

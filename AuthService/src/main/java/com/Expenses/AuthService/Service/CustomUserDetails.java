@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomUserDetails extends UserInfo implements UserDetails {
 
-//fields
+    //fields
 
     private String username;
 
@@ -26,25 +26,23 @@ public class CustomUserDetails extends UserInfo implements UserDetails {
     Collection<? extends GrantedAuthority> authorities;
 
 
-// constructor
+    // constructor
     public CustomUserDetails(UserInfo userInfo) {
        this.username = userInfo.getUsername();
        this.password = userInfo.getPassword();
 
         List<GrantedAuthority> auths =new ArrayList<>();
 
-        for(UserRole role :userInfo.getRoles()){
+        for(UserRole role :userInfo.getRoles()){ // set<UserRole>
+            System.out.println(role+"custom user details"+ role.getRoleTypeName());
             auths.add(new SimpleGrantedAuthority("ROLE_" + role.getRoleTypeName()));
         }
+        System.out.println(auths+"granted authority  ");
         this.authorities =auths;
     }
 
-
-
-
     //no use of below we create customer
-
-    //these are gettter and setters
+    //these are getter and setters
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
