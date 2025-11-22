@@ -105,7 +105,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/auth/v1/login",
                                 "/auth/v1/signup",
-                                "/auth/v1/refresh-token"
+                                "/auth/v1/refreshToken"
 //                                "/apis/swaggers/**",
 //                                "/apis/docs/**",
 //                                "/swagger-ui/**",

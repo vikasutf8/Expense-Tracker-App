@@ -50,6 +50,8 @@ public class RefreshTokenService {
     }
 
     public Optional<Tokens> findByToken(String token) {
-        return tokensRepository.findByToken(token);
+        var tokenindb =tokensRepository.findByToken(token);
+        System.out.println(tokenindb);
+        return tokenindb;
     }
 }

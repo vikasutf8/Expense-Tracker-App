@@ -31,21 +31,11 @@ public class TokenController {
     @Autowired
     private JwtTokenService jwtService;
 
-    @Autowired
-    private UserInfoRepository userInfoRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     // ✅ LOGIN ENDPOINT
     @PostMapping("/login")
     public ResponseEntity<?> authenticateAndFetchToken(@RequestBody AuthRequestDto authRequestDTO) {
-        UserInfo user = userInfoRepository.findByUsername(authRequestDTO.getUsername());
-        if (user != null) {
-            System.out.println("Raw password login: " + authRequestDTO.getPassword());
-            System.out.println("Encoded password from DB: " + user.getPassword());
-            System.out.println("Matches? " + passwordEncoder.matches(authRequestDTO.getPassword(), user.getPassword()));
-        }
+
 
         try {
             System.out.println(authRequestDTO.getUsername()+"auth request dto"+authRequestDTO.getPassword());
@@ -55,7 +45,7 @@ public class TokenController {
                             authRequestDTO.getPassword()
                     )
             );
-            System.out.println(authentication+"dsfjhashdkj");
+
             if (authentication.isAuthenticated()) {
                 System.out.println(authentication.isAuthenticated());
                 Tokens refreshToken = refreshTokenService.createRefreshToken(authRequestDTO.getUsername());
@@ -80,6 +70,7 @@ public class TokenController {
 
     @PostMapping("/refreshToken")
     public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequestDto refreshTokenRequestDTO) {
+        System.out.println(refreshTokenRequestDTO.getRefreshToken()+"refresh token");
         return refreshTokenService.findByToken(refreshTokenRequestDTO.getRefreshToken())
                 .map(refreshTokenService::verifyExpiration)
                 .map(Tokens:: getUserInfo)
