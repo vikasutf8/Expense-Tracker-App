@@ -4,6 +4,7 @@ import com.Expenses.AuthService.Dto.UserInfoDto;
 import com.Expenses.AuthService.Enitity.Enum.RoleType;
 import com.Expenses.AuthService.Enitity.UserInfo;
 import com.Expenses.AuthService.Enitity.UserRole;
+import com.Expenses.AuthService.KafkaEventProducer.UserInfoEventProducer;
 import com.Expenses.AuthService.Repository.UserInfoRepository;
 import com.Expenses.AuthService.Repository.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +26,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
 
     private final UserInfoRepository userInfoRepository;
-
     private  final PasswordEncoder passwordEncoder;
-
     private  final UserRoleRepository userRoleRepository;
+    private  final UserInfoEventProducer userInfoEventProducer;
 
     private String encodePassword(String rawPassword) {
         return passwordEncoder.encode(rawPassword);
@@ -72,7 +72,8 @@ public class UserDetailServiceImpl implements UserDetailsService {
                 .roles(roles)
                 .build();
         userInfoRepository.save(user);
-
+//push user into kafka
+        userInfoEventProducer.sendEventToKafka(dto);
         return true;
 
     }

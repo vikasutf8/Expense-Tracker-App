@@ -13,22 +13,37 @@ spring:
       hibernate:
         format_sql: false
         use_sql_comments: false
-        type:
-          # ✅ Show parameter bindings in logs
-          descriptor:
-            sql:
-              BasicBinder: trace
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    template:
+      topic-name: user-info-events-topic
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: AuthService.Serialization.UserInfoSerializer #given path serializer
+
+    consumer:
+      group-id: my-json-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+
+    admin:
+      auto-create: true   # auto-create topic
+
+server:
+  port: 8081
 
 logging:
   level:
-    org.hibernate.SQL: DEBUG           # ✅ Show SQL queries
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE  # ✅ Show query parameter bindings
-    org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl: DEBUG  # ✅ Connection info
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl: DEBUG
     org.hibernate.engine.jdbc.connections.internal: DEBUG
-    org.springframework.jdbc.core: DEBUG                 # ✅ Log JDBC operations
+    org.springframework.jdbc.core: DEBUG
     org.springframework.jdbc.datasource: DEBUG
-
-  # Optional: set server port
-server:
-  port: 8081
